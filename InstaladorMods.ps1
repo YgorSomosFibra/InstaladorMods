@@ -463,6 +463,10 @@ $btnInstall.Add_Click({
                         $rawContent = Get-Content $manifestPath -Raw -Encoding UTF8
                         # Remove BOM se existir
                         $rawContent = $rawContent -replace '^\xEF\xBB\xBF', ''
+                        # Remove comentários em bloco /* ... */
+                        $rawContent = $rawContent -replace '(?s)/\*.*?\*/', ''
+                        # Remove comentários de linha // ... (ignorando urls com ://)
+                        $rawContent = $rawContent -replace '(?<!:)[ \t]*//.*', ''
                         $manifestContent = $rawContent | ConvertFrom-Json
                         $type = $manifestContent.modules[0].type
 
